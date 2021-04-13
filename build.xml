@@ -237,7 +237,9 @@
     </condition>
 
     <!-- needed to compile org.apache.cassandra.utils.JMXServerUtils -->
-    <condition property="jdk11-javac-exports" value="--add-exports java.rmi/sun.rmi.registry=ALL-UNNAMED" else="">
+    <condition property="jdk11-javac-exports"
+               value="--add-exports java.rmi/sun.rmi.registry=ALL-UNNAMED --add-exports java.base/sun.nio.ch=ALL-UNNAMED"
+               else="">
         <not>
             <equals arg1="${ant.java.version}" arg2="1.8"/>
         </not>
@@ -2077,7 +2079,8 @@
       <echo file=".idea/compiler.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JavacSettings">
-    <option name="ADDITIONAL_OPTIONS_STRING" value="--add-exports java.rmi/sun.rmi.registry=ALL-UNNAMED" />
+    <option name="ADDITIONAL_OPTIONS_STRING"
+            value="--add-exports java.rmi/sun.rmi.registry=ALL-UNNAMED --add-exports java.base/sun.nio.ch=ALL-UNNAMED" />
   </component>
 </project>]]></echo>
   </target>

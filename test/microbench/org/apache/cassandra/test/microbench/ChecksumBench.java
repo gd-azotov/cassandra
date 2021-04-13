@@ -22,6 +22,7 @@ import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import com.google.common.primitives.Longs;
 import org.apache.cassandra.utils.ChecksumType;
+import org.apache.cassandra.utils.checksum.Java9PortForCRC32C;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -114,6 +115,17 @@ public class ChecksumBench
                 new org.apache.commons.codec.digest.PureJavaCrc32C();
         pureJavaCrc32C.update(array, 0, array.length);
         return Longs.toByteArray(pureJavaCrc32C.getValue());
+    }
+
+    @Benchmark
+    @Fork(value = 1, jvmArgsAppend = { "-Xmx512M", "-Djmh.executor=CUSTOM",
+            "-Djmh.executor.class=org.apache.cassandra.test.microbench.FastThreadExecutor",
+    })
+    public byte[] benchJava9PortForCRC32C()
+    {
+        Java9PortForCRC32C java9PortForCrc32C = new Java9PortForCRC32C();
+        java9PortForCrc32C.update(array, 0, array.length);
+        return Longs.toByteArray(java9PortForCrc32C.getValue());
     }
 
     // Below benchmarks are commented because CRC32C is unavailable in Java 8.
