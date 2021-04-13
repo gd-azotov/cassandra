@@ -97,9 +97,21 @@ public class ChecksumBench
     @Fork(value = 1, jvmArgsAppend = { "-Xmx512M", "-Djmh.executor=CUSTOM",
             "-Djmh.executor.class=org.apache.cassandra.test.microbench.FastThreadExecutor",
     })
-    public byte[] benchPureJavaCrc32c()
+    public byte[] benchSnappyPureJavaCrc32c()
     {
         PureJavaCrc32C pureJavaCrc32C = new PureJavaCrc32C();
+        pureJavaCrc32C.update(array, 0, array.length);
+        return Longs.toByteArray(pureJavaCrc32C.getValue());
+    }
+
+    @Benchmark
+    @Fork(value = 1, jvmArgsAppend = { "-Xmx512M", "-Djmh.executor=CUSTOM",
+            "-Djmh.executor.class=org.apache.cassandra.test.microbench.FastThreadExecutor",
+    })
+    public byte[] benchCommonsCodecPureJavaCrc32c()
+    {
+        org.apache.commons.codec.digest.PureJavaCrc32C pureJavaCrc32C =
+                new org.apache.commons.codec.digest.PureJavaCrc32C();
         pureJavaCrc32C.update(array, 0, array.length);
         return Longs.toByteArray(pureJavaCrc32C.getValue());
     }
